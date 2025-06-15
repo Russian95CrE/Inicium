@@ -6,6 +6,12 @@ OBJDIR = build/obj
 OUTDIR = build/out
 ISODIR = isodir
 
+# recursively find all .c files in src and subfolders
+SRCS_C = $(shell find src -name '*.c')
+OBJS_C = $(patsubst src/%.c,$(OBJDIR)/%.o,$(SRCS_C))
+# boot assembly file remains separate
+BOOT_OBJ = $(OBJDIR)/boot.o
+
 all: kernel.iso
 
 $(OBJDIR):
@@ -17,14 +23,16 @@ $(OUTDIR):
 $(ISODIR)/boot/grub:
 	mkdir -p $(ISODIR)/boot/grub
 
-$(OBJDIR)/boot.o: src/boot.asm | $(OBJDIR)
-	nasm -f elf32 src/boot.asm -o $(OBJDIR)/boot.o
+$(BOOT_OBJ): src/boot.asm | $(OBJDIR)
+	nasm -f elf32 src/boot.asm -o $(BOOT_OBJ)
 
-$(OBJDIR)/kernel.o: src/kernel.c | $(OBJDIR)
-	$(CC) $(CFLAGS) -c src/kernel.c -o $(OBJDIR)/kernel.o
+# generic rule for C files in src/ and its subfolders
+$(OBJDIR)/%.o: src/%.c | $(OBJDIR)
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(OUTDIR)/kernel.bin: $(OBJDIR)/boot.o $(OBJDIR)/kernel.o linker.ld | $(OUTDIR)
-	$(CC) $(LDFLAGS) -T linker.ld $(OBJDIR)/boot.o $(OBJDIR)/kernel.o -o $(OUTDIR)/kernel.bin
+$(OUTDIR)/kernel.bin: $(BOOT_OBJ) $(OBJS_C) linker.ld | $(OUTDIR)
+	$(CC) $(LDFLAGS) -T linker.ld $(BOOT_OBJ) $(OBJS_C) -o $(OUTDIR)/kernel.bin
 
 kernel.iso: $(OUTDIR)/kernel.bin grub.cfg | $(ISODIR)/boot/grub
 	cp $(OUTDIR)/kernel.bin $(ISODIR)/boot/kernel.bin
