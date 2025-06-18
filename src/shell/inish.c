@@ -2,7 +2,7 @@
 
 #include "inish.h"
 #include "../drivers/driver.h"
-#include "../io/io.h"
+#include "../io/stdio.h"
 #include "../keyboard/keyboard.h"
 
 /*
@@ -13,15 +13,15 @@ in a future.
 void shell_main(void) {
     keyboard_init(); // initialize keyboard
 
-    print("\nInish (Inicium Shell)\n");
-    print("\n[shell@shell]#  ");
+    printf("\nInish (Inicium Shell)\n");
+    printf("\n[shell@shell]#  ");
     
     // simple polling loop to echo keystrokes
     while (1) {
         char c = keyboard_getchar();
         if (c) {
             char buf[2] = { c, '\0' };
-            print(buf);
+            printf(buf);
         }
     }
 }

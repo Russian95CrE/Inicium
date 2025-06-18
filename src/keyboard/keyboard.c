@@ -1,7 +1,7 @@
 /* keyboard.c */
 
 #include "keyboard.h"
-#include "../io/io.h"
+#include "../io/stdio.h"
 
 #define PORT_KEYBOARD_DATA 0x60
 #define PORT_KEYBOARD_STATUS 0x64
@@ -23,7 +23,7 @@ static const char scancode_to_ascii[128] = {
 };
 
 void keyboard_init(void) {
-    print("[keyboard] initialized\n");
+    printf("[keyboard] initialized\n");
 }
 
 char keyboard_getchar(void) {
