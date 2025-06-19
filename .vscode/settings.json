@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "stdio.h": "c",
-        "hello.h": "c"
+        "hello.h": "c",
+        "keyboard.h": "c"
     }
 }

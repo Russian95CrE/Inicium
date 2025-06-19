@@ -1,3 +1,5 @@
+/* hello.c */
+
 #include "../io/stdio.h"
 
 int hello(void) {

@@ -1,7 +1,7 @@
-/* io.c */
+/* stdio.c */
 
 #include "stdio.h"
-#include "../drivers/driver.h"
+#include "../drivers/video/video.h"
 
 void printf(const char *str) {
     while (*str) {

@@ -11,9 +11,9 @@ void kernel_main() {
     driver_init();
     keyboard_init();
     hello();
-    shell_main(); // launch the shell
+    shell_main(); // Launch the shell
 
-    // fallback infinite loop
+    // Fallback infinite loop
     while (1) {
         ;
     }
