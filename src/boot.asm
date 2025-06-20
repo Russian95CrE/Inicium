@@ -2,7 +2,7 @@ section .multiboot_header
     align 8
 multiboot2_header:
     dd 0xE85250D6                          ; magic
-    dd 0                                    ; arch (0 = i386)
+    dd 0                                  ; arch (0 = i386)
     dd multiboot2_header_end - multiboot2_header  ; header length
     dd -(0xE85250D6 + 0 + (multiboot2_header_end - multiboot2_header))  ; checksum
 
@@ -17,7 +17,8 @@ multiboot2_header:
     dd 0                                   ; reserved/padding
 
     align 8
-    dd 0                                   ; end tag type
+    dw 0                                   ; end tag type
+    dw 0
     dd 8                                   ; end tag size
 
     align 8
@@ -33,9 +34,9 @@ section .text
     extern kernel_main
 
 _start:
-    mov esp, stack_top                    ; init stack
-    mov esi, ebx                          ; pass multiboot info ptr
-    call kernel_main                      ; enter C
+    mov esp, stack_top                    ; init stack pointer
+    push ebx                             ; push multiboot info ptr (em EBX)
+    call kernel_main                      ; call kernel_main(void* mb_info)
 
 .hang:
     jmp .hang

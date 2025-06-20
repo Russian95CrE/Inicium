@@ -1,6 +1,6 @@
 CC = gcc
-CFLAGS = -fno-stack-protector -ffreestanding -m32
-LDFLAGS = -fno-stack-protector -ffreestanding -m32 -nostdlib
+CFLAGS = -fno-stack-protector -ffreestanding -m64
+LDFLAGS = -fno-stack-protector -ffreestanding -m64 -nostdlib
 
 OBJDIR = build/obj
 OUTDIR = build/out

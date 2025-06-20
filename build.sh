@@ -14,4 +14,4 @@ if ! make -j"$(nproc)"; then
 fi
 
 # run
-qemu-system-i386 -cdrom build/out/kernel.iso -vga std -m 512M
+qemu-system-x86_64 -cdrom build/out/kernel.iso -vga vmware -m 512M -device hpet

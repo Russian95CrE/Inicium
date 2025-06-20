@@ -8,6 +8,8 @@ extern uint32_t  framebuffer_width;
 extern uint32_t  framebuffer_height;
 extern uint8_t   framebuffer_bpp;
 
+void
+put_pixel(uint32_t x, uint32_t y, uint32_t color);
 bool
 video_driver_init(void);
 void
