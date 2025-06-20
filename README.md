@@ -13,6 +13,7 @@ Inicium is a simple kernel written in C and x86 assembly.
 
 - `src/core/` - Kernel entry point and core logic
 - `src/drivers/` - Hardware drivers (video, etc.)
+- `src/fs` - File system code.
 - `src/io/` - Input/output utilities
 - `src/keyboard/` - Keyboard driver
 - `src/shell/` - Shell implementation
