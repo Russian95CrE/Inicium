@@ -9,7 +9,9 @@ int res_x   = 80;
 int res_y   = 25;
 
 // New video driver functions
-void video_driver_init(void) {
+bool video_driver_init(void) {
+    if (VIDEO_MEMORY == NULL) {
+    }
     vid_pos = 0;
 }
 

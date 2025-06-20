@@ -1,7 +1,9 @@
+/* commands.c */
+
 #include "commands.h"
+#include "../core/kernel.h"
 #include "../drivers/video/video.h"
 #include <stdbool.h>
-#include <stdio.h>
 
 bool clear(void) {
     char *video = (char *)0xb8000;
@@ -13,9 +15,13 @@ bool clear(void) {
 }
 
 bool poweroff(void) {
-    // Yes.
-    static bool did_poweroff = false;
-    if (did_poweroff) {
-        printf("hmmmm placeholder poweroff\n");
+    // Try to power off using ACPI (works in QEMU/Bochs)
+    // Out to port 0x604 with value 0x2000
+    outw(0x604, 0x2000);
+
+    // Fallback: halt the CPU
+    while (1) {
+        __asm__ __volatile__("hlt");
     }
+    return true; // Not reached
 }

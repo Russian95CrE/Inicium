@@ -43,7 +43,7 @@ void shell_main(void) {
                             handled = 1;
                         }
                         if (!handled && strcmp(cmd_buf, "poweroff") != 0) {
-                            printf("Command not found: %s\n", cmd_buf);
+                            printf("Unknown command: %s\n", cmd_buf);
                         }
                     }
                     break; // Print prompt again
