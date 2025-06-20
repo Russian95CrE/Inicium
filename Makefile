@@ -41,12 +41,12 @@ $(OBJDIR)/%.o: %.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 # Link kernel binary
-$(OUTDIR)/kernel.bin: $(BOOT_OBJ) $(OBJS_C) linker.ld | $(OUTDIR)
-	ld -m elf_i386 -T linker.ld $(BOOT_OBJ) $(OBJS_C) -o $(OUTDIR)/kernel.bin
+$(OUTDIR)/kernel.elf: $(BOOT_OBJ) $(OBJS_C) linker.ld | $(OUTDIR)
+	ld -m elf_i386 -T linker.ld $(BOOT_OBJ) $(OBJS_C) -o $(OUTDIR)/kernel.elf
 
 # ISO creation
-kernel.iso: $(OUTDIR)/kernel.bin $(GRUB_CFG) | $(ISODIR)/boot/grub
-	cp $(OUTDIR)/kernel.bin $(ISODIR)/boot/kernel.bin
+kernel.iso: $(OUTDIR)/kernel.elf $(GRUB_CFG) | $(ISODIR)/boot/grub
+	cp $(OUTDIR)/kernel.elf $(ISODIR)/boot/kernel.elf
 	cp grub.cfg $(ISODIR)/boot/grub/grub.cfg
 	grub-mkrescue -o $(OUTDIR)/kernel.iso $(ISODIR)
 

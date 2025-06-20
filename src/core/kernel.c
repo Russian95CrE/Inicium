@@ -19,8 +19,7 @@ outb(unsigned short port, unsigned char val) {
 // Kernel entrypoint
 void
 kernel_main(void* mb_info) {
-    multiboot_info_t*            mb  = (multiboot_info_t*) mb_info;
-    multiboot_tag_t*             tag = (multiboot_tag_t*) ((char*) mb + 8);
+    multiboot_tag_t*             tag = (multiboot_tag_t*) ((uint8_t*) mb_info + 8);
     multiboot_tag_framebuffer_t* fb  = 0;
 
     while (tag->type != 0) {
@@ -28,26 +27,23 @@ kernel_main(void* mb_info) {
             fb = (multiboot_tag_framebuffer_t*) tag;
             break;
         }
-        tag = (multiboot_tag_t*) ((char*) tag + ((tag->size + 7) & ~7));
+
+        // Alinha o ponteiro da próxima tag (Multiboot2 exige alinhamento de 8 bytes)
+        tag = (multiboot_tag_t*) ((uint8_t*) tag + ((tag->size + 7) & ~7));
     }
 
     if (fb) {
-        framebuffer        = (uint32_t*) fb->framebuffer_addr;
+        framebuffer        = (uint32_t*) (uintptr_t) fb->framebuffer_addr;
         framebuffer_pitch  = fb->framebuffer_pitch;
         framebuffer_width  = fb->framebuffer_width;
         framebuffer_height = fb->framebuffer_height;
         framebuffer_bpp    = fb->framebuffer_bpp;
 
-        if (video_driver_init()) {
-            video_driver_clear(0xFF0000FF);
-            video_driver_puts("Hello, Framebuffer!\n");
-            video_driver_puts("Inicium carregado.");
-        }
-
         while (1)
             __asm__("hlt");
     }
 
+    // Caso não tenha framebuffer
     while (1)
         __asm__("hlt");
 }

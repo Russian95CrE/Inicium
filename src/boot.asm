@@ -2,24 +2,23 @@ section .multiboot_header
     align 8
 multiboot2_header:
     dd 0xE85250D6                          ; magic
-    dd 0                                  ; arch (0 = i386)
+    dd 0                                    ; arch (0 = i386)
     dd multiboot2_header_end - multiboot2_header  ; header length
     dd -(0xE85250D6 + 0 + (multiboot2_header_end - multiboot2_header))  ; checksum
 
     align 8
-    ; framebuffer tag (type=5, size=24)
-    dd 5
-    dd 24
-    dd 1024
-    dd 768
-    dd 32
-    dd 0           ; framebuffer_type (0 = indexed, 1 = RGB, etc)
-    dd 0           ; reserved/padding
+    dw 5                                   ; type framebuffer
+    dw 1                                   ; flags (1 = required)
+    dd 28                                  ; size tag (FIX: 28 bytes)
+    dd 1024                                ; width
+    dd 768                                 ; height
+    dd 32                                  ; bpp
+    dd 0                                   ; framebuffer_type (0 = indexed)
+    dd 0                                   ; reserved/padding
 
     align 8
-    ; end tag (type=0, size=8)
-    dd 0
-    dd 8
+    dd 0                                   ; end tag type
+    dd 8                                   ; end tag size
 
     align 8
 multiboot2_header_end:
