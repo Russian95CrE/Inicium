@@ -6,7 +6,8 @@
 #define PORT_KEYBOARD_DATA 0x60
 #define PORT_KEYBOARD_STATUS 0x64
 
-static inline unsigned char inb(unsigned short port) {
+static inline unsigned char
+inb(unsigned short port) {
     unsigned char ret;
     __asm__ volatile("inb %1, %0" : "=a"(ret) : "dN"(port));
     return ret;
@@ -21,11 +22,13 @@ static const char scancode_to_ascii[128] = {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-void keyboard_init(void) {
+void
+keyboard_init(void) {
     printf("[keyboard] initialized\n");
 }
 
-char keyboard_getchar(void) {
+char
+keyboard_getchar(void) {
     unsigned char scancode;
     char          ascii;
     while (1) {

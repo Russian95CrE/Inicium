@@ -1,4 +1,8 @@
 #pragma once
 
-bool clear(void);
-bool poweroff(void);
+void
+clear(void);
+void
+poweroff(void);
+void
+reboot(void);
