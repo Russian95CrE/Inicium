@@ -15,12 +15,12 @@ void shell_main(void) {
 
     printf("\nInish (Inicium Shell)\n");
     printf("\n[shell@shell]# ");
-    
+
     // simple polling loop to echo keystrokes
     while (1) {
         char c = keyboard_getchar();
         if (c) {
-            char buf[2] = { c, '\0' };
+            char buf[2] = {c, '\0'};
             printf(buf);
         }
     }

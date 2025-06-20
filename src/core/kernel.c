@@ -1,9 +1,9 @@
 /* kernel.c */
 
 #include "../drivers/driver.h"
-#include "../shell/inish.h"
 #include "../io/stdio.h"
 #include "../keyboard/keyboard.h"
+#include "../shell/inish.h"
 #include "../test_simple_c_code/hello.h"
 
 void kernel_main() {

@@ -12,7 +12,7 @@ void printf(const char *str) {
 void clear(void) {
     char *video = (char *)0xb8000;
     for (int i = 0; i < res_x * res_y * 2; i += 2) {
-        video[i] = ' ';
+        video[i]     = ' ';
         video[i + 1] = 0x07;
     }
 }
