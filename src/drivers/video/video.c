@@ -10,7 +10,6 @@ int res_y   = 25;
 
 // New video driver functions
 void video_driver_init(void) {
-    clear();
     vid_pos = 0;
 }
 

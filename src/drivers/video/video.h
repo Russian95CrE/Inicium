@@ -1,5 +1,6 @@
 #pragma once
 
+extern int vid_pos;
 extern int res_x;
 extern int res_y;
 
