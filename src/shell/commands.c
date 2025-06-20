@@ -6,13 +6,12 @@
 #include <stdbool.h>
 
 void
-clear(void) {
-    char* video = (char*) 0xb8000;
-    for (int i = 0; i < res_x * res_y * 2; i += 2) {
-        video[i]     = ' ';
-        video[i + 1] = 0x07;
+clear() {
+    for (uint32_t y = 0; y < framebuffer_height; y++) {
+        for (uint32_t x = 0; x < framebuffer_width; x++) {
+            framebuffer[y * (framebuffer_pitch / 4) + x] = 0x00000000; // preto
+        }
     }
-    reset_hw_cursor();
 }
 
 void

@@ -1,33 +1,42 @@
-section .text
-align 8
+section .multiboot_header
+    align 8
 multiboot2_header:
-    dd 0xE85250D6         ; magic
-    dd 0                  ; architecture
-    dd 40                 ; total size of header in bytes
-    dd 0x100000000 - (0xE85250D6 + 0 + 40) ; checksum
+    dd 0xE85250D6                          ; magic
+    dd 0                                  ; arch (0 = i386)
+    dd multiboot2_header_end - multiboot2_header  ; header length
+    dd -(0xE85250D6 + 0 + (multiboot2_header_end - multiboot2_header))  ; checksum
 
-    ; framebuffer tag
-    dw 5
-    dw 0
-    dd 20
+    align 8
+    ; framebuffer tag (type=5, size=24)
+    dd 5
+    dd 24
     dd 1024
     dd 768
     dd 32
+    dd 0           ; framebuffer_type (0 = indexed, 1 = RGB, etc)
+    dd 0           ; reserved/padding
 
-    ; end tag
-    dw 0
-    dw 0
+    align 8
+    ; end tag (type=0, size=8)
+    dd 0
     dd 8
 
-align 8
+    align 8
 multiboot2_header_end:
 
-global _start
-extern kernel_main
+section .bss
+    align 16
+stack_bottom: resb 16384                  ; 16 KB stack
+stack_top:
+
+section .text
+    global _start
+    extern kernel_main
 
 _start:
-    mov esi, ebx
-    call kernel_main
+    mov esp, stack_top                    ; init stack
+    mov esi, ebx                          ; pass multiboot info ptr
+    call kernel_main                      ; enter C
 
 .hang:
     jmp .hang

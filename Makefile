@@ -42,7 +42,7 @@ $(OBJDIR)/%.o: %.c | $(OBJDIR)
 
 # Link kernel binary
 $(OUTDIR)/kernel.bin: $(BOOT_OBJ) $(OBJS_C) linker.ld | $(OUTDIR)
-	$(CC) $(LDFLAGS) -T linker.ld $(BOOT_OBJ) $(OBJS_C) -o $(OUTDIR)/kernel.bin
+	ld -m elf_i386 -T linker.ld $(BOOT_OBJ) $(OBJS_C) -o $(OUTDIR)/kernel.bin
 
 # ISO creation
 kernel.iso: $(OUTDIR)/kernel.bin $(GRUB_CFG) | $(ISODIR)/boot/grub
