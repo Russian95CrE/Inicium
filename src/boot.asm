@@ -7,16 +7,6 @@ multiboot2_header:
     dd -(0xE85250D6 + 0 + (multiboot2_header_end - multiboot2_header))  ; checksum
 
     align 8
-    dw 5                                   ; type framebuffer
-    dw 1                                   ; flags (1 = required)
-    dd 28                                  ; size tag (FIX: 28 bytes)
-    dd 1024                                ; width
-    dd 768                                 ; height
-    dd 32                                  ; bpp
-    dd 0                                   ; framebuffer_type (0 = indexed)
-    dd 0                                   ; reserved/padding
-
-    align 8
     dw 0                                   ; end tag type
     dw 0
     dd 8                                   ; end tag size
@@ -24,19 +14,19 @@ multiboot2_header:
     align 8
 multiboot2_header_end:
 
-section .bss
-    align 16
-stack_bottom: resb 16384                  ; 16 KB stack
-stack_top:
-
 section .text
     global _start
-    extern kernel_main
-
 _start:
-    mov esp, stack_top                    ; init stack pointer
-    push ebx                             ; push multiboot info ptr (em EBX)
-    call kernel_main                      ; call kernel_main(void* mb_info)
+    ; Set up stack (16 KiB at 0x100000)
+    mov rsp, 0x100000
+    and rsp, ~0xF         ; Align stack to 16 bytes
+    ; Move Multiboot info pointer from rsi to rdi for C calling convention
+    mov rdi, rsi
+    ; Pass Multiboot info pointer to kernel_main
+    extern kernel_main
+    call kernel_main
 
+    ; Halt if kernel_main returns
 .hang:
+    hlt
     jmp .hang

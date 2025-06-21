@@ -31,7 +31,7 @@ itoa(int value, char* str) {
         value       = -value;
     }
     while (value && i < 15) {
-        buf[i++] = '0' + (value % 10);
+        buf[i++] = (char) ('0' + (value % 10));
         value /= 10;
     }
     if (is_negative)

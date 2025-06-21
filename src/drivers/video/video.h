@@ -1,20 +1,23 @@
-#pragma once
+#ifndef VIDEO_H
+#define VIDEO_H
+
 #include <stdint.h>
-#include <stdbool.h>
-
-extern uint32_t* framebuffer;
-extern uint32_t  framebuffer_pitch;
-extern uint32_t  framebuffer_width;
-extern uint32_t  framebuffer_height;
-extern uint8_t   framebuffer_bpp;
 
 void
-put_pixel(uint32_t x, uint32_t y, uint32_t color);
-bool
-video_driver_init(void);
+video_init();
 void
-video_driver_clear(uint32_t color);
+video_clear();
 void
-video_driver_putc(char c);
+video_putc(char c);
 void
-video_driver_puts(const char* s);
+video_puts(const char* str);
+void
+video_set_cursor(uint8_t x, uint8_t y);
+
+// Aliases for compatibility with other code
+#define video_driver_init video_init
+#define video_driver_clear video_clear
+#define video_driver_putc video_putc
+#define video_driver_puts video_puts
+
+#endif // VIDEO_H

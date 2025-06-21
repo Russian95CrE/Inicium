@@ -1,15 +1,25 @@
 ENTRY(_start)
+SECTIONS
+{
+    . = 1K;
 
-SECTIONS {
-    . = 1M;
-
-    .text ALIGN(8) : {
-        /* Força header multiboot2 no início e com alinhamento */
+    .multiboot_header ALIGN(8) : {
         KEEP(*(.multiboot_header))
-        *(.text*)
     }
 
-    .rodata : { *(.rodata*) }
-    .data   : { *(.data*) }
-    .bss    : { *(.bss*) }
+    .text ALIGN(4K) : {
+        *(.text .text.*)
+    }
+
+    .rodata ALIGN(4K) : {
+        *(.rodata .rodata.*)
+    }
+
+    .data ALIGN(4K) : {
+        *(.data .data.*)
+    }
+
+    .bss ALIGN(4K) : {
+        *(.bss .bss.* COMMON)
+    }
 }

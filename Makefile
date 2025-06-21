@@ -1,24 +1,35 @@
 CC = gcc
-CFLAGS = -fno-stack-protector -ffreestanding -m64
-LDFLAGS = -fno-stack-protector -ffreestanding -m64 -nostdlib
+
+COMMON_CFLAGS  = -fno-stack-protector -ffreestanding -m64 -Wall -Wextra -Wpedantic -Wconversion -Werror
+COMMON_LDFLAGS = -fno-stack-protector -ffreestanding -m64 -nostdlib
+
+MODE ?= Release
+
+ifeq ($(MODE), Debug)
+    CFLAGS  = $(COMMON_CFLAGS) -Og -g1
+    LDFLAGS = $(COMMON_LDFLAGS)
+else ifeq ($(MODE), Release)
+    CFLAGS  = $(COMMON_CFLAGS) -O3 -march=native -mtune=native -flto -fno-omit-frame-pointer
+    LDFLAGS = $(COMMON_LDFLAGS)
+else
+    $(error INVALID MODE: use Debug or Release)
+endif
 
 OBJDIR = build/obj
 OUTDIR = build/out
 ISODIR = isodir
 
-# recursively find all .c files in src and subfolders
-SRCS_C = $(shell find src -name '*.c')
-OBJS_C = $(patsubst src/%.c,$(OBJDIR)/%.o,$(SRCS_C))
+SRCS_C   = $(shell find src -name '*.c')
+OBJS_C   = $(patsubst src/%.c,$(OBJDIR)/%.o,$(SRCS_C))
 BOOT_OBJ = $(OBJDIR)/boot.o
-
 GRUB_CFG = $(wildcard grub.cfg)
 
 .PHONY: all clean
 
 all: kernel.iso
+	@echo -e "\e[33mBuilding in $(MODE) mode...\e[0m"
 	@echo -e "\e[32mBuild complete.\e[0m"
 
-# Directory creation (order-only prerequisites)
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
 
@@ -28,23 +39,18 @@ $(OUTDIR):
 $(ISODIR)/boot/grub:
 	mkdir -p $(ISODIR)/boot/grub
 
-# Boot assembly
 $(BOOT_OBJ): src/boot.asm | $(OBJDIR)
-	nasm -f elf32 src/boot.asm -o $(BOOT_OBJ)
+	nasm -f elf64 $< -o $@
 
-# vpath for C sources
 vpath %.c src
 
-# Pattern rule for C files
 $(OBJDIR)/%.o: %.c | $(OBJDIR)
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# Link kernel binary
 $(OUTDIR)/kernel.elf: $(BOOT_OBJ) $(OBJS_C) linker.ld | $(OUTDIR)
-	ld -m elf_i386 -T linker.ld $(BOOT_OBJ) $(OBJS_C) -o $(OUTDIR)/kernel.elf
+	$(CC) $(LDFLAGS) -T linker.ld $(BOOT_OBJ) $(OBJS_C) -o $@
 
-# ISO creation
 kernel.iso: $(OUTDIR)/kernel.elf $(GRUB_CFG) | $(ISODIR)/boot/grub
 	cp $(OUTDIR)/kernel.elf $(ISODIR)/boot/kernel.elf
 	cp grub.cfg $(ISODIR)/boot/grub/grub.cfg

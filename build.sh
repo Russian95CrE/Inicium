@@ -2,6 +2,8 @@
 clear
 
 ISO_PATH="build/out/kernel.iso"
+QEMU_COMMAND="qemu-system-x86_64 -cdrom $ISO_PATH -vga std -m 512M -serial mon:stdio"
+
 
 if ! make clean; then
     echo -e "\n\e[31mTried to clean installation, but failed!\e[0m\n"
@@ -14,4 +16,7 @@ if ! make -j"$(nproc)"; then
 fi
 
 # run
-qemu-system-x86_64 -cdrom build/out/kernel.iso -vga vmware -m 512M -device hpet
+if ! $QEMU_COMMAND; then
+    echo -e "\n\e[31mFailed to run QEMU!\e[0m\n"
+    exit 1
+fi

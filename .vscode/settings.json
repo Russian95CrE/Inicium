@@ -5,6 +5,8 @@
         "stdbool.h": "c",
         "stdio.h": "c",
         "inish.h": "c",
-        "cstdint": "c"
+        "cstdint": "c",
+        "stdint.h": "c",
+        "inicium.h": "c"
     }
 }

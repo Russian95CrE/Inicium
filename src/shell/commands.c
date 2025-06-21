@@ -7,11 +7,7 @@
 
 void
 clear() {
-    for (uint32_t y = 0; y < framebuffer_height; y++) {
-        for (uint32_t x = 0; x < framebuffer_width; x++) {
-            framebuffer[y * (framebuffer_pitch / 4) + x] = 0x00000000; // preto
-        }
-    }
+    video_driver_clear();
 }
 
 void
